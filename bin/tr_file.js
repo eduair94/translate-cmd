@@ -5,25 +5,28 @@ const path = require('path');
 const TranslateCommand = require('../src/translate-command');
 
 program
-  .version('1.0.0')
+  .version('1.1.0')
   .description('Translate JSON files using Google Translate API')
   .argument('<source>', 'Source JSON file (e.g., en.json) or filename to search recursively')
   .argument('<languages>', 'Target languages separated by comma (e.g., es,ja,pt)')
   .option('-k, --key <key>', 'Google Translate API key (optional - uses built-in key if not provided)')
   .option('-d, --delay <ms>', 'Delay between requests in milliseconds', '50')
+  .option('-s, --source-lang <lang>', 'Source language code (e.g., en, es, fr) - auto-detected if not provided')
   .option('-r, --recursive', 'Search for source file in all subdirectories')
   .action(async (source, languages, options) => {
     try {
       const targetLanguages = languages.split(',').map(lang => lang.trim());
       
       if (options.recursive) {
-        // Search for files recursively
+        // Search for files recursively - extract just the filename
+        const filename = path.basename(source);
         const RecursiveTranslator = require('../src/recursive-translator');
         const recursiveTranslator = new RecursiveTranslator({
-          filename: source,
+          filename,
           targetLanguages,
           apiKey: options.key,
-          delay: parseInt(options.delay) || 50
+          delay: parseInt(options.delay) || 50,
+          sourceLanguage: options.sourceLang
         });
         
         await recursiveTranslator.execute();
@@ -34,7 +37,8 @@ program
           sourceFile,
           targetLanguages,
           apiKey: options.key,
-          delay: parseInt(options.delay) || 50
+          delay: parseInt(options.delay) || 50,
+          sourceLanguage: options.sourceLang
         });
 
         await translateCommand.execute();

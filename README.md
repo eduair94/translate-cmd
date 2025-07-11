@@ -23,8 +23,11 @@ tr_file <source-file> <target-languages> [options]
 ### Examples
 
 ```bash
-# Translate en.json to Spanish, Japanese, and Portuguese (uses built-in API key)
+# Translate en.json to Spanish, Japanese, and Portuguese (auto-detects source language)
 tr_file en.json es,ja,pt
+
+# Specify source language explicitly
+tr_file myfile.json es,ja,pt --source-lang en
 
 # With custom API key
 tr_file en.json es,ja,pt -k YOUR_API_KEY
@@ -34,7 +37,28 @@ tr_file en.json es,ja,pt -d 200
 
 # Recursive translation - find all 'en.json' files in subdirectories
 tr_file en.json es,fr,de --recursive
+
+# Recursive with explicit source language
+tr_file content.json es,fr,de -r -s en
 ```
+
+### Source Language Detection
+
+By default, `tr-file` automatically detects the source language of your content. However, you can specify it explicitly:
+
+```bash
+# Auto-detect source language (default)
+tr_file content.json es,fr,de
+
+# Specify source language explicitly
+tr_file content.json es,fr,de --source-lang en
+tr_file content.json es,fr,de -s fr  # Short form
+```
+
+**Benefits of specifying source language:**
+- Faster translation (skips detection step)
+- More accurate translations
+- Automatically filters out target languages that match the source
 
 ### Recursive Translation
 
@@ -46,6 +70,9 @@ tr_file en.json es,fr,de --recursive
 
 # Short form with -r flag
 tr_file en.json es,fr,de -r
+
+# Recursive with explicit source language
+tr_file content.json es,fr,de -r -s en
 ```
 
 **Recursive Example:**
@@ -71,6 +98,7 @@ project/
 ### Options
 
 - `-k, --key <key>`: Google Translate API key (optional - uses built-in key if not provided)
+- `-s, --source-lang <lang>`: Source language code (e.g., en, es, fr) - auto-detected if not provided
 - `-d, --delay <ms>`: Delay between requests in milliseconds (default: 50ms)
 - `-r, --recursive`: Search for source file in all subdirectories
 
@@ -102,6 +130,8 @@ tr_file en.json es,ja,pt
 
 ## Features
 
+- ✅ **Automatic Language Detection**: Detects source language automatically or accepts explicit specification
+- ✅ **Smart Language Filtering**: Automatically skips target languages that match the source
 - ✅ **Batch Translation**: Translates multiple strings in single API calls for maximum speed
 - ✅ **Smart Deduplication**: Only translates unique strings, avoiding redundant API calls
 - ✅ **Incremental Updates**: Only translates missing keys, preserves existing translations

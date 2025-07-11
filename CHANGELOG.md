@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - 2025-07-11
+
+### Added
+- **Automatic Language Detection**: Source language is now automatically detected if not specified
+- **Source Language Option**: New `-s, --source-lang` option to explicitly specify source language
+- **Smart Language Filtering**: Automatically skips target languages that match the source language
+- **Improved Translation Accuracy**: Source language specification improves translation quality
+- **GitHub Repository**: Package now properly linked to GitHub repository
+
+### Changed
+- Enhanced CLI with source language detection and filtering
+- Updated progress messages to show source → target language translations
+- Improved error handling for language detection failures
+
+### Fixed
+- Fixed package.json repository URL format for npm
+- Updated all documentation with new language detection features
+
 ## [1.0.0] - 2025-07-11
 
 ### Added

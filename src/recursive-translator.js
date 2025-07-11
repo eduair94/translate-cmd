@@ -8,6 +8,7 @@ class RecursiveTranslator {
   constructor(options) {
     this.filename = options.filename;
     this.targetLanguages = options.targetLanguages;
+    this.sourceLanguage = options.sourceLanguage;
     this.apiKey = options.apiKey;
     this.delay = options.delay || 50;
   }
@@ -46,6 +47,7 @@ class RecursiveTranslator {
         const translateCommand = new TranslateCommand({
           sourceFile,
           targetLanguages: this.targetLanguages,
+          sourceLanguage: this.sourceLanguage,
           apiKey: this.apiKey,
           delay: this.delay
         });

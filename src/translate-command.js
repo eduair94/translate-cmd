@@ -8,9 +8,11 @@ class TranslateCommand {
   constructor(options) {
     this.sourceFile = options.sourceFile;
     this.targetLanguages = options.targetLanguages;
+    this.sourceLanguage = options.sourceLanguage; // Can be null for auto-detection
     this.apiKey = options.apiKey || process.env.GOOGLE_TRANSLATE_API_KEY || 'AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw';
     this.delay = options.delay || 50;
     this.baseUrl = 'https://translation.googleapis.com/language/translate/v2';
+    this.detectUrl = 'https://translation.googleapis.com/language/translate/v2/detect';
     
     if (!this.apiKey) {
       throw new Error('Google Translate API key is required. Use -k flag or set GOOGLE_TRANSLATE_API_KEY environment variable.');
@@ -30,9 +32,35 @@ class TranslateCommand {
       const uniqueStrings = [...new Set(strings.map(s => s.text))];
       console.log(chalk.green(`✓ Found ${strings.length} strings to translate (${uniqueStrings.length} unique)`));
       
+      // Detect or validate source language
+      let detectedSourceLang = this.sourceLanguage;
+      if (!detectedSourceLang) {
+        // Auto-detect source language using first few strings
+        const sampleTexts = uniqueStrings.slice(0, 3);
+        detectedSourceLang = await this.detectLanguage(sampleTexts);
+        console.log(chalk.cyan(`🔍 Auto-detected source language: ${detectedSourceLang.toUpperCase()}`));
+      } else {
+        console.log(chalk.cyan(`📝 Using specified source language: ${detectedSourceLang.toUpperCase()}`));
+      }
+      
+      // Filter out target languages that are the same as source
+      const filteredTargetLanguages = this.targetLanguages.filter(lang => 
+        lang.toLowerCase() !== detectedSourceLang.toLowerCase()
+      );
+      
+      if (filteredTargetLanguages.length !== this.targetLanguages.length) {
+        const skipped = this.targetLanguages.length - filteredTargetLanguages.length;
+        console.log(chalk.yellow(`⚠️  Skipped ${skipped} target language(s) that match source language`));
+      }
+      
+      if (filteredTargetLanguages.length === 0) {
+        console.log(chalk.yellow('⚠️  No target languages to translate to after filtering'));
+        return;
+      }
+      
       // Translate to each target language
-      for (const language of this.targetLanguages) {
-        await this.translateToLanguage(sourceData, strings, language);
+      for (const language of filteredTargetLanguages) {
+        await this.translateToLanguage(sourceData, strings, language, detectedSourceLang);
       }
       
       console.log(chalk.green.bold('🎉 Translation completed successfully!'));
@@ -58,6 +86,34 @@ class TranslateCommand {
     }
   }
 
+  async detectLanguage(texts) {
+    try {
+      const sampleText = texts.slice(0, 3).join(' ');
+      const response = await axios.post(
+        `${this.detectUrl}?key=${this.apiKey}`,
+        {
+          q: sampleText
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          timeout: 10000
+        }
+      );
+
+      if (response.data && response.data.data && response.data.data.detections) {
+        const detection = response.data.data.detections[0][0];
+        return detection.language;
+      } else {
+        throw new Error('Unable to detect language');
+      }
+    } catch (error) {
+      console.log(chalk.yellow('⚠️  Language detection failed, defaulting to English (en)'));
+      return 'en'; // Default fallback
+    }
+  }
+
   extractStrings(obj, prefix = '') {
     const strings = [];
     
@@ -78,8 +134,8 @@ class TranslateCommand {
     return strings;
   }
 
-  async translateToLanguage(sourceData, strings, targetLanguage) {
-    const spinner = ora(`Translating to ${targetLanguage.toUpperCase()}...`).start();
+  async translateToLanguage(sourceData, strings, targetLanguage, sourceLanguage) {
+    const spinner = ora(`Translating from ${sourceLanguage.toUpperCase()} to ${targetLanguage.toUpperCase()}...`).start();
     
     try {
       const outputFile = this.getOutputFilePath(targetLanguage);
@@ -114,7 +170,7 @@ class TranslateCommand {
       spinner.text = `Translating ${textsToTranslate.length} unique strings to ${targetLanguage.toUpperCase()}... (${stringsToTranslate.length} new keys)`;
       
       // Batch translate all texts at once
-      const translatedTexts = await this.batchTranslateTexts(textsToTranslate, targetLanguage);
+      const translatedTexts = await this.batchTranslateTexts(textsToTranslate, targetLanguage, sourceLanguage);
       
       // Create a mapping from original to translated text
       const translationMap = new Map();
@@ -143,7 +199,7 @@ class TranslateCommand {
     }
   }
 
-  async batchTranslateTexts(texts, targetLanguage) {
+  async batchTranslateTexts(texts, targetLanguage, sourceLanguage) {
     const MAX_BATCH_SIZE = 128; // Google Translate API limit
     const MAX_CHARS_PER_REQUEST = 30000; // Conservative limit to avoid hitting API limits
     
@@ -159,7 +215,7 @@ class TranslateCommand {
           currentBatchSize + textLength > MAX_CHARS_PER_REQUEST) {
         
         if (currentBatch.length > 0) {
-          const batchResults = await this.translateBatch(currentBatch, targetLanguage);
+          const batchResults = await this.translateBatch(currentBatch, targetLanguage, sourceLanguage);
           results.push(...batchResults);
           currentBatch = [];
           currentBatchSize = 0;
@@ -177,22 +233,29 @@ class TranslateCommand {
     
     // Process final batch
     if (currentBatch.length > 0) {
-      const batchResults = await this.translateBatch(currentBatch, targetLanguage);
+      const batchResults = await this.translateBatch(currentBatch, targetLanguage, sourceLanguage);
       results.push(...batchResults);
     }
     
     return results;
   }
 
-  async translateBatch(texts, targetLanguage) {
+  async translateBatch(texts, targetLanguage, sourceLanguage) {
     try {
+      const requestBody = {
+        q: texts,
+        target: targetLanguage,
+        format: 'text'
+      };
+      
+      // Add source language if provided
+      if (sourceLanguage) {
+        requestBody.source = sourceLanguage;
+      }
+      
       const response = await axios.post(
         `${this.baseUrl}?key=${this.apiKey}`,
-        {
-          q: texts,
-          target: targetLanguage,
-          format: 'text'
-        },
+        requestBody,
         {
           headers: {
             'Content-Type': 'application/json'
