@@ -1,6 +1,12 @@
 # tr-file
 
-A command-line tool for translating JSON files using Google Translate API. Perfect for i18n (internationalization) workflows.
+[![npm version](https://badge.fury.io/js/tr-file.svg)](https://badge.fury.io/js/tr-file)
+[![GitHub license](https://img.shields.io/github/license/airau/tr-file.svg)](https://github.com/airau/tr-file/blob/master/LICENSE)
+[![npm downloads](https://img.shields.io/npm/dt/tr-file.svg)](https://www.npmjs.com/package/tr-file)
+[![GitHub issues](https://img.shields.io/github/issues/airau/tr-file.svg)](https://github.com/airau/tr-file/issues)
+[![GitHub stars](https://img.shields.io/github/stars/airau/tr-file.svg)](https://github.com/airau/tr-file/stargazers)
+
+A fast command-line tool for translating JSON files using Google Translate API. Perfect for i18n (internationalization) workflows with batch translation, recursive search, and incremental updates.
 
 ## Installation
 
