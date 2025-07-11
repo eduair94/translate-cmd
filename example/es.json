@@ -1,0 +1,17 @@
+{
+  "app.title": "API de Perfil de WhatsApp",
+  "app.shortTitle": "API WP",
+  "nav.apiStatus": "Estado de la API",
+  "nav.status": "Estado",
+  "nav.pricing": "Precios",
+  "nav.pricingShort": "$99",
+  "nav.api": "API",
+  "nav.getAccess": "Obtener acceso a la API",
+  "nav.home": "Inicio",
+  "nav.tools": "Herramientas",
+  "custom.key": "Esta es una clave personalizada que debe conservarse",
+  "another.custom": "Otra traducción personalizada que debe permanecer",
+  "nav.about": "Acerca de",
+  "nav.contact": "Contacto",
+  "message.welcome": "Bienvenido a nuestra aplicación"
+}

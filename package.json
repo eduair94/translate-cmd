@@ -1,0 +1,58 @@
+{
+  "name": "tr-file",
+  "version": "1.0.0",
+  "description": "A fast command-line tool for translating JSON files using Google Translate API. Perfect for i18n workflows with batch translation, recursive search, and incremental updates.",
+  "main": "index.js",
+  "bin": {
+    "tr_file": "./bin/tr_file.js"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublishOnly": "echo \"Ready to publish tr-file!\"",
+    "postinstall": "echo \"✅ tr-file installed successfully! Run 'tr_file --help' to get started.\""
+  },
+  "keywords": [
+    "translate",
+    "translation",
+    "json",
+    "i18n",
+    "internationalization",
+    "google-translate",
+    "localization",
+    "cli",
+    "command-line",
+    "batch-translation",
+    "recursive",
+    "multilingual"
+  ],
+  "author": {
+    "name": "airau",
+    "email": "your.email@example.com",
+    "url": "https://github.com/airau"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/airau/tr-file.git"
+  },
+  "bugs": {
+    "url": "https://github.com/airau/tr-file/issues"
+  },
+  "homepage": "https://github.com/airau/tr-file#readme",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "commander": "^11.0.0",
+    "chalk": "^4.1.2",
+    "ora": "^5.4.1"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "files": [
+    "bin/",
+    "src/",
+    "index.js",
+    "README.md",
+    "LICENSE"
+  ]
+}
