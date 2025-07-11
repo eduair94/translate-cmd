@@ -8,6 +8,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.1.0] - 2025-07-11
 
 ### Added
+- **Automatic Language Detection**: Auto-detects source language from content
+- **Source Language Option**: New `-s, --source-lang` flag to specify source language explicitly
+- **Smart Language Filtering**: Automatically skips target languages that match the source language
+- **Improved Performance**: Better translation accuracy with explicit source language specification
+- **Enhanced CLI Help**: Updated help text and examples with new language detection features
+
+### Fixed
+- **Recursive Search Bug**: Fixed issue where recursive search was looking for full paths instead of filenames
+- **Path Handling**: Improved path resolution for recursive file searches
+
+### Changed
+- **CLI Interface**: Added source language detection and filtering
+- **Translation Logic**: Enhanced batch translation with source language support
+- **API Calls**: More efficient translations with explicit source language specification
 - **Automatic Language Detection**: Source language is now automatically detected if not specified
 - **Source Language Option**: New `-s, --source-lang` option to explicitly specify source language
 - **Smart Language Filtering**: Automatically skips target languages that match the source language
