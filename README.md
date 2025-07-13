@@ -6,21 +6,44 @@
 [![GitHub issues](https://img.shields.io/github/issues/airau/tr-file.svg)](https://github.com/airau/tr-file/issues)
 [![GitHub stars](https://img.shields.io/github/stars/airau/tr-file.svg)](https://github.com/airau/tr-file/stargazers)
 
-A fast command-line tool for translating JSON files using Google Translate API. Perfect for i18n (internationalization) workflows with batch translation, recursive search, and incremental updates.
+A fast command-line tool and JavaScript library for translating JSON files using Google Translate API. Perfect for i18n (internationalization) workflows with batch translation, recursive search, incremental updates, and programmatic API.
 
 ## Installation
 
+### CLI Tool (Global)
 ```bash
 npm install -g tr-file
 ```
 
+### Library (Project)
+```bash
+npm install tr-file
+```
+
 ## Usage
+
+### 🖥️ Command Line Interface
 
 ```bash
 tr_file <source-file> <target-languages> [options]
 ```
 
-### Examples
+### 📚 JavaScript Library
+
+```javascript
+const { translateJSON } = require('tr-file');
+
+const translations = await translateJSON({
+  "welcome": "Welcome to our app",
+  "nav.home": "Home"
+}, ['es', 'fr', 'de']);
+
+console.log(translations.es); // Spanish translations
+```
+
+**[📖 Full API Documentation →](API_USAGE.md)**
+
+### CLI Examples
 
 ```bash
 # Translate en.json to Spanish, Japanese, and Portuguese (auto-detects source language)

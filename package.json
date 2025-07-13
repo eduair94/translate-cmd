@@ -1,7 +1,7 @@
 {
   "name": "tr-file",
-  "version": "1.1.0",
-  "description": "A fast command-line tool for translating JSON files using Google Translate API. Perfect for i18n workflows with batch translation, recursive search, and incremental updates.",
+  "version": "1.2.0",
+  "description": "A fast command-line tool and JavaScript library for translating JSON files using Google Translate API. Perfect for i18n workflows with batch translation, recursive search, incremental updates, and programmatic API.",
   "main": "index.js",
   "bin": {
     "tr_file": "bin/tr_file.js"
@@ -26,7 +26,11 @@
     "multilingual",
     "language-detection",
     "auto-detect",
-    "source-language"
+    "source-language",
+    "api",
+    "library",
+    "programmatic",
+    "nodejs"
   ],
   "author": {
     "name": "airau",
@@ -56,6 +60,7 @@
     "src/",
     "index.js",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "API_USAGE.md"
   ]
 }
