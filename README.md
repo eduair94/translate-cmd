@@ -6,7 +6,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/airau/tr-file.svg)](https://github.com/airau/tr-file/issues)
 [![GitHub stars](https://img.shields.io/github/stars/airau/tr-file.svg)](https://github.com/airau/tr-file/stargazers)
 
-A fast command-line tool and JavaScript library for translating JSON files using Google Translate API. Perfect for i18n (internationalization) workflows with batch translation, recursive search, incremental updates, and programmatic API.
+A fast command-line tool and TypeScript/JavaScript library for translating JSON files and arrays using Google Translate API. Perfect for i18n (internationalization) workflows with batch translation, recursive search, incremental updates, array support, and programmatic API.
 
 ## Installation
 
@@ -39,6 +39,31 @@ const translations = await translateJSON({
 }, ['es', 'fr', 'de']);
 
 console.log(translations.es); // Spanish translations
+```
+
+### 🏷️ TypeScript Support
+
+Full TypeScript support with type definitions included:
+
+```typescript
+import { translateJSON, TranslateAPI, TranslationResult } from 'tr-file';
+
+// Type-safe translation
+const result: TranslationResult = await translateJSON({
+  welcome: "Welcome to our app",
+  items: ["Home", "About", "Contact"]
+}, ['es', 'fr']);
+
+// Using the API class with types
+const translator = new TranslateAPI({
+  sourceLanguage: 'en',
+  verbose: true
+});
+
+const strings: string[] = await translator.translateStrings(
+  ["Hello", "World"], 
+  'es'
+);
 ```
 
 **[📖 Full API Documentation →](API_USAGE.md)**
@@ -153,13 +178,16 @@ tr_file en.json es,ja,pt
 
 ## Features
 
+- ✅ **TypeScript Support**: Full type definitions and IntelliSense support
+- ✅ **Array Translation**: Native support for JSON arrays and complex nested structures
+- ✅ **Programmatic API**: Use as a library in your Node.js/TypeScript projects
 - ✅ **Automatic Language Detection**: Detects source language automatically or accepts explicit specification
 - ✅ **Smart Language Filtering**: Automatically skips target languages that match the source
 - ✅ **Batch Translation**: Translates multiple strings in single API calls for maximum speed
 - ✅ **Smart Deduplication**: Only translates unique strings, avoiding redundant API calls
 - ✅ **Incremental Updates**: Only translates missing keys, preserves existing translations
 - ✅ **Recursive Translation**: Find and translate files in all subdirectories
-- ✅ **Preserves JSON Structure**: Maintains nested objects and arrays
+- ✅ **Preserves JSON Structure**: Maintains nested objects and arrays perfectly
 - ✅ **Progress Tracking**: Visual indicators with spinners and progress info
 - ✅ **Multiple Languages**: Translate to multiple target languages in one command
 - ✅ **Error Handling**: Graceful error handling and recovery

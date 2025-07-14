@@ -5,7 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.1.0] - 2025-07-11
+## [1.3.0] - 2025-07-13
+
+### Added
+- **Full TypeScript Support**: Complete type definitions for all classes and functions
+- **Array Translation**: Native support for JSON arrays and nested array structures
+- **TypeScript Examples**: Comprehensive TypeScript usage examples with type safety
+- **Enhanced Type Safety**: IntelliSense support and compile-time error checking
+- **Complex Array Support**: Deep nested arrays, mixed content arrays, and array performance optimization
+
+### Changed
+- **Package Description**: Updated to highlight TypeScript and array support
+- **Enhanced Documentation**: Added TypeScript usage examples in README
+- **Improved Keywords**: Added TypeScript, arrays, and types keywords for better discoverability
+- **File Exports**: Added `.d.ts` files to npm package exports
+
+### Fixed
+- **Array Path Handling**: Fixed complex nested array path parsing and value setting
+- **Array Structure Preservation**: Arrays now maintain their structure perfectly during translation
+- **Edge Cases**: Improved handling of empty arrays, mixed content, and deeply nested structures
+
+### Performance
+- **Array Translation Speed**: Optimized array processing for better performance
+- **Type Definitions**: Zero runtime overhead with TypeScript support
+
+## [1.2.0] - 2025-07-11
 
 ### Added
 - **Automatic Language Detection**: Auto-detects source language from content

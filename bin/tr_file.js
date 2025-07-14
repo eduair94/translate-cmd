@@ -5,7 +5,7 @@ const path = require('path');
 const TranslateCommand = require('../src/translate-command');
 
 program
-  .version('1.2.0')
+  .version('1.3.0')
   .description('Translate JSON files using Google Translate API')
   .argument('<source>', 'Source JSON file (e.g., en.json) or filename to search recursively')
   .argument('<languages>', 'Target languages separated by comma (e.g., es,ja,pt)')
