@@ -1,12 +1,18 @@
 export interface TranslateOptions {
+  /** Google Translate API key (optional - uses built-in key if not provided) */
   apiKey?: string;
+  /** Source language code (e.g., 'en', 'es', 'fr') - auto-detected if not provided */
   sourceLanguage?: string;
+  /** Delay between API requests in milliseconds (default: 50) */
   delay?: number;
+  /** Show progress messages during translation (default: true) */
   verbose?: boolean;
 }
 
 export interface TranslateJSONOptions extends TranslateOptions {
   // Additional options for JSON translation
+  // Note: Placeholders in curly braces {placeholder} are automatically protected from translation
+  // Note: JSON structure is preserved - flat keys like "test.test" remain flat, nested objects remain nested
 }
 
 export interface StringPath {
@@ -29,6 +35,11 @@ export declare class TranslateAPI {
   
   /**
    * Translate a JSON object to multiple target languages
+   * Features:
+   * - Preserves original JSON structure (flat keys remain flat, nested objects remain nested)
+   * - Protects placeholders in curly braces from translation (e.g., {username}, {count})
+   * - Maintains non-string values (numbers, booleans, null, etc.)
+   * - Supports arrays and mixed data types
    * @param jsonData - The JSON object or array to translate
    * @param targetLanguages - Target language(s) (e.g., 'es' or ['es', 'fr', 'de'])
    * @param options - Additional options

@@ -1,10 +1,10 @@
 # tr-file
 
 [![npm version](https://badge.fury.io/js/tr-file.svg)](https://badge.fury.io/js/tr-file)
-[![GitHub license](https://img.shields.io/github/license/airau/tr-file.svg)](https://github.com/airau/tr-file/blob/master/LICENSE)
+[![GitHub license](https://img.shields.io/github/license/eduair94/translate-cmd.svg)](https://github.com/eduair94/translate-cmd/blob/master/LICENSE)
 [![npm downloads](https://img.shields.io/npm/dt/tr-file.svg)](https://www.npmjs.com/package/tr-file)
-[![GitHub issues](https://img.shields.io/github/issues/airau/tr-file.svg)](https://github.com/airau/tr-file/issues)
-[![GitHub stars](https://img.shields.io/github/stars/airau/tr-file.svg)](https://github.com/airau/tr-file/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/eduair94/translate-cmd.svg)](https://github.com/eduair94/translate-cmd/issues)
+[![GitHub stars](https://img.shields.io/github/stars/eduair94/translate-cmd.svg)](https://github.com/eduair94/translate-cmd/stargazers)
 
 A fast command-line tool and TypeScript/JavaScript library for translating JSON files and arrays using Google Translate API. Perfect for i18n (internationalization) workflows with batch translation, recursive search, incremental updates, array support, and programmatic API.
 
@@ -108,6 +108,61 @@ tr_file content.json es,fr,de -s fr  # Short form
 - More accurate translations
 - Automatically filters out target languages that match the source
 
+### Advanced Features
+
+#### Placeholder Protection
+
+Automatically protects content in curly braces `{placeholder}` from translation:
+
+```bash
+# Input: {"message": "Hello {username}, you have {count} notifications"}
+# Output: {"message": "Hola {username}, tienes {count} notificaciones"}
+tr_file messages.json es
+```
+
+**Example:**
+```json
+{
+  "greeting": "Welcome {name}!",
+  "status": "You have {count} messages",
+  "complex": "Processing {items.processed} of {items.total} items"
+}
+```
+
+Translates to (Spanish):
+```json
+{
+  "greeting": "¡Bienvenido {name}!",
+  "status": "Tienes {count} mensajes", 
+  "complex": "Procesando {items.processed} de {items.total} elementos"
+}
+```
+
+#### Structure Preservation
+
+Maintains your exact JSON structure:
+
+```json
+{
+  "flat.key": "Flat key with dots",
+  "nested": {
+    "key": "Nested key"
+  },
+  "array": ["Item 1", "Item 2"],
+  "mixed": {
+    "text": "Translate this",
+    "number": 42,
+    "boolean": true
+  }
+}
+```
+
+**Features:**
+- Flat keys like `"test.test"` remain as flat keys
+- Nested objects remain nested
+- Arrays maintain their structure
+- Non-string values (numbers, booleans, null) are preserved
+
 ### Recursive Translation
 
 Search for and translate all files with a specific name in all subdirectories:
@@ -188,6 +243,9 @@ tr_file en.json es,ja,pt
 - ✅ **Incremental Updates**: Only translates missing keys, preserves existing translations
 - ✅ **Recursive Translation**: Find and translate files in all subdirectories
 - ✅ **Preserves JSON Structure**: Maintains nested objects and arrays perfectly
+- ✅ **Structure Preservation**: Keeps flat keys like `"test.test"` as flat keys, nested objects as nested
+- ✅ **Placeholder Protection**: Automatically protects content in curly braces like `{username}` from translation
+- ✅ **Mixed Data Types**: Preserves numbers, booleans, null values, and other non-string data
 - ✅ **Progress Tracking**: Visual indicators with spinners and progress info
 - ✅ **Multiple Languages**: Translate to multiple target languages in one command
 - ✅ **Error Handling**: Graceful error handling and recovery

@@ -164,7 +164,7 @@ class TranslateAPI {
     const textsToTranslate = [...new Set(strings.map(s => s.text))];
     
     if (textsToTranslate.length === 0) {
-      return { ...sourceData };
+      return JSON.parse(JSON.stringify(sourceData)); // Deep copy
     }
     
     // Batch translate all texts
@@ -176,11 +176,22 @@ class TranslateAPI {
       translationMap.set(textsToTranslate[i], translatedTexts[i]);
     }
     
-    // Apply translations to create new object with same structure
-    const translatedData = Array.isArray(sourceData) ? [] : {};
-    for (const { path: stringPath, text } of strings) {
+    // Start with a deep copy of the source data to preserve structure
+    const translatedData = JSON.parse(JSON.stringify(sourceData));
+    
+    // Apply translations only to translatable strings, preserving original structure
+    // Sort so that flat keys are processed last (they take precedence)
+    const sortedStrings = strings.sort((a, b) => {
+      if (a.path === b.path) {
+        return a.isFlatKey ? 1 : -1; // Flat keys come after nested keys
+      }
+      return 0;
+    });
+    
+    for (const { path: stringPath, text, isFlatKey } of sortedStrings) {
       const translatedText = translationMap.get(text) || text;
-      this.setNestedValue(translatedData, stringPath, translatedText);
+      // Use the original source data structure to determine how to set values
+      this.setNestedValuePreservingStructure(translatedData, sourceData, stringPath, translatedText, isFlatKey);
     }
     
     if (this.verbose) {
@@ -190,8 +201,13 @@ class TranslateAPI {
     return translatedData;
   }
 
-  extractStrings(obj, prefix = '') {
+  extractStrings(obj, prefix = '', rootObj = null) {
     const strings = [];
+    
+    // Use rootObj to reference the original object for checking flat keys
+    if (rootObj === null) {
+      rootObj = obj;
+    }
     
     if (Array.isArray(obj)) {
       // Handle arrays
@@ -204,7 +220,7 @@ class TranslateAPI {
             text: item
           });
         } else if (typeof item === 'object' && item !== null) {
-          strings.push(...this.extractStrings(item, currentPath));
+          strings.push(...this.extractStrings(item, currentPath, rootObj));
         }
       });
     } else if (typeof obj === 'object' && obj !== null) {
@@ -213,14 +229,18 @@ class TranslateAPI {
         const currentPath = prefix ? `${prefix}.${key}` : key;
         
         if (typeof value === 'string') {
+          // Check if this is a flat key (exists at root level with dots in the key name)
+          const isTopLevelFlatKey = !prefix && rootObj.hasOwnProperty(key);
+          
           strings.push({
             path: currentPath,
-            text: value
+            text: value,
+            isFlatKey: isTopLevelFlatKey
           });
         } else if (Array.isArray(value)) {
-          strings.push(...this.extractStrings(value, currentPath));
+          strings.push(...this.extractStrings(value, currentPath, rootObj));
         } else if (typeof value === 'object' && value !== null) {
-          strings.push(...this.extractStrings(value, currentPath));
+          strings.push(...this.extractStrings(value, currentPath, rootObj));
         }
       }
     }
@@ -266,10 +286,53 @@ class TranslateAPI {
     return results;
   }
 
+  /**
+   * Protect placeholders in curly braces from translation
+   * @param {string} text - Text containing placeholders
+   * @returns {Object} Object with protected text and placeholder map
+   */
+  protectPlaceholders(text) {
+    const placeholderMap = new Map();
+    const placeholderRegex = /\{[^}]+\}/g;
+    let protectedText = text;
+    let match;
+    let index = 0;
+    
+    while ((match = placeholderRegex.exec(text)) !== null) {
+      const placeholder = match[0];
+      const protectionToken = `__PLACEHOLDER_${index}__`;
+      placeholderMap.set(protectionToken, placeholder);
+      protectedText = protectedText.replace(placeholder, protectionToken);
+      index++;
+    }
+    
+    return { protectedText, placeholderMap };
+  }
+
+  /**
+   * Restore placeholders in translated text
+   * @param {string} translatedText - Translated text with protection tokens
+   * @param {Map} placeholderMap - Map of protection tokens to original placeholders
+   * @returns {string} Text with restored placeholders
+   */
+  restorePlaceholders(translatedText, placeholderMap) {
+    let restoredText = translatedText;
+    
+    for (const [token, placeholder] of placeholderMap) {
+      restoredText = restoredText.replace(new RegExp(token, 'g'), placeholder);
+    }
+    
+    return restoredText;
+  }
+
   async translateBatch(texts, targetLanguage, sourceLanguage) {
     try {
+      // Protect placeholders in all texts
+      const protectedTexts = texts.map(text => this.protectPlaceholders(text));
+      const textsToTranslate = protectedTexts.map(p => p.protectedText);
+      
       const requestBody = {
-        q: texts,
+        q: textsToTranslate,
         target: targetLanguage,
         format: 'text'
       };
@@ -288,7 +351,13 @@ class TranslateAPI {
       );
 
       if (response.data?.data?.translations) {
-        return response.data.data.translations.map(t => t.translatedText);
+        const translatedTexts = response.data.data.translations.map(t => t.translatedText);
+        
+        // Restore placeholders in translated texts
+        return translatedTexts.map((translatedText, index) => {
+          const { placeholderMap } = protectedTexts[index];
+          return this.restorePlaceholders(translatedText, placeholderMap);
+        });
       } else {
         throw new Error('Invalid response from Google Translate API');
       }
@@ -304,8 +373,9 @@ class TranslateAPI {
   }
 
   setNestedValue(obj, path, value) {
-    // Check if this is a flat key (exists directly in the object)
-    if (obj.hasOwnProperty && obj.hasOwnProperty(path)) {
+    // First, check if this is a flat key that exists directly in the source object
+    // This preserves keys like "test.test" as literal keys rather than nested paths
+    if (typeof obj === 'object' && obj !== null && obj.hasOwnProperty(path)) {
       obj[path] = value;
       return;
     }
@@ -320,8 +390,18 @@ class TranslateAPI {
       return;
     }
     
-    // Handle complex paths
+    // For complex paths, only proceed if the flat key doesn't already exist
+    // This prevents "edge.cases" from being created as nested when it should be flat
     const pathParts = this.parsePath(path);
+    
+    // If this is a simple key (no arrays or complex nesting), check if it should be flat
+    if (pathParts.length === 1 && pathParts[0].type === 'object') {
+      // Don't create nested structure for simple dotted keys
+      obj[path] = value;
+      return;
+    }
+    
+    // Handle complex paths with arrays and actual nesting
     let current = obj;
     
     for (let i = 0; i < pathParts.length - 1; i++) {
@@ -369,6 +449,116 @@ class TranslateAPI {
     } else {
       current[finalPart.key] = value;
     }
+  }
+
+  setNestedValuePreservingStructure(targetObj, sourceObj, path, value, isFlatKey = false) {
+    // If this is marked as a flat key, treat it as such
+    if (isFlatKey) {
+      targetObj[path] = value;
+      return;
+    }
+    
+    // For nested paths, we need to navigate properly even if a flat key exists
+    // This is the key difference - we use a custom navigation method
+    this.setNestedValueForcePath(targetObj, path, value);
+  }
+  
+  setNestedValueForcePath(obj, path, value) {
+    // Handle pure array index like "[0]", "[1]", etc.
+    if (path.match(/^\[\d+\]$/)) {
+      const index = parseInt(path.slice(1, -1));
+      while (obj.length <= index) {
+        obj.push(null);
+      }
+      obj[index] = value;
+      return;
+    }
+    
+    // Check if any part of the path exists as a flat key
+    const pathParts = path.split('.');
+    for (let i = 1; i < pathParts.length; i++) {
+      const flatKeyPath = pathParts.slice(0, i).join('.');
+      if (obj.hasOwnProperty(flatKeyPath)) {
+        // Navigate into the flat key object and set the remaining path
+        const remainingPath = pathParts.slice(i).join('.');
+        if (obj[flatKeyPath] && typeof obj[flatKeyPath] === 'object') {
+          this.setNestedValue(obj[flatKeyPath], remainingPath, value);
+        }
+        return;
+      }
+    }
+    
+    // Handle complex paths with arrays and actual nesting
+    const parsedParts = this.parsePath(path);
+    
+    let current = obj;
+    
+    for (let i = 0; i < parsedParts.length - 1; i++) {
+      const part = parsedParts[i];
+      
+      if (part.type === 'array') {
+        if (part.key && !Array.isArray(current[part.key])) {
+          current[part.key] = [];
+        }
+        
+        const targetArray = part.key ? current[part.key] : current;
+        
+        // Ensure array has enough elements
+        while (targetArray.length <= part.index) {
+          targetArray.push(null);
+        }
+        
+        // Navigate to the array element
+        current = targetArray[part.index];
+        
+        // Create object if it doesn't exist
+        if (current === null || current === undefined) {
+          current = {};
+          targetArray[part.index] = current;
+        }
+      } else {
+        // Object navigation
+        if (!current[part.key] || typeof current[part.key] !== 'object') {
+          current[part.key] = {};
+        }
+        current = current[part.key];
+      }
+    }
+    
+    // Set the final value
+    const finalPart = parsedParts[parsedParts.length - 1];
+    if (finalPart.type === 'array') {
+      const targetArray = finalPart.key ? current[finalPart.key] : current;
+      if (!Array.isArray(targetArray)) {
+        return; // Skip if target is not an array
+      }
+      while (targetArray.length <= finalPart.index) {
+        targetArray.push(null);
+      }
+      targetArray[finalPart.index] = value;
+    } else {
+      current[finalPart.key] = value;
+    }
+  }
+
+  pathExistsInSource(obj, path) {
+    // Check if this exact path exists as a direct property
+    if (typeof obj === 'object' && obj !== null && obj.hasOwnProperty(path)) {
+      return true;
+    }
+    
+    // For complex paths, check if any parent level exists as a flat key
+    const pathParts = path.split('.');
+    for (let i = 1; i < pathParts.length; i++) {
+      const partialPath = pathParts.slice(0, i).join('.');
+      if (obj.hasOwnProperty(partialPath)) {
+        // This parent exists as a flat key, so we should navigate into it
+        // instead of creating a nested structure
+        return true;
+      }
+    }
+    
+    return false;
   }
 
   parsePath(path) {
