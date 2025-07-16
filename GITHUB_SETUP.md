@@ -2,6 +2,10 @@
 
 ## 🚀 Quick Setup
 
+### 🌐 [Live Demo](https://tr-file.checkleaked.cc)
+
+Test tr-file directly in your browser with our interactive demo! Upload JSON files or paste JSON content to see real-time translations.
+
 ### 1. Create GitHub Repository
 
 Go to [GitHub](https://github.com) and create a new repository:

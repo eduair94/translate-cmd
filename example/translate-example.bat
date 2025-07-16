@@ -2,6 +2,9 @@
 REM Example batch file showing how to use tr_file with the provided API key
 REM Make sure to keep your API key secure and don't commit it to version control
 
+REM 🚀 Try the Live Demo: https://tr-file.checkleaked.cc
+REM Test tr-file directly in your browser with our interactive demo!
+
 set API_KEY=AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw
 
 echo 🌍 Translating example JSON file...

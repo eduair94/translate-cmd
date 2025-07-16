@@ -8,6 +8,10 @@
 
 A fast command-line tool and TypeScript/JavaScript library for translating JSON files and arrays using Google Translate API. Perfect for i18n (internationalization) workflows with batch translation, recursive search, incremental updates, array support, and programmatic API.
 
+## 🚀 [Try the Live Demo](https://tr-file.checkleaked.cc)
+
+Test tr-file directly in your browser with our interactive demo! Upload JSON files or paste JSON content to see real-time translations.
+
 ## Installation
 
 ### CLI Tool (Global)

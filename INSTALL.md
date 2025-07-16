@@ -1,5 +1,9 @@
 # Installation and Usage Guide
 
+## 🚀 [Try the Live Demo](https://tr-file.checkleaked.cc)
+
+Test tr-file directly in your browser with our interactive demo! Upload JSON files or paste JSON content to see real-time translations.
+
 ## Quick Start
 
 1. **Install the package globally:**

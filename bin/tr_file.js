@@ -5,8 +5,8 @@ const path = require('path');
 const TranslateCommand = require('../src/translate-command');
 
 program
-  .version('1.3.0')
-  .description('Translate JSON files using Google Translate API')
+  .version('1.4.1')
+  .description('Translate JSON files using Google Translate API\n\n🚀 Try the Live Demo: https://tr-file.checkleaked.cc')
   .argument('<source>', 'Source JSON file (e.g., en.json) or filename to search recursively')
   .argument('<languages>', 'Target languages separated by comma (e.g., es,ja,pt)')
   .option('-k, --key <key>', 'Google Translate API key (optional - uses built-in key if not provided)')

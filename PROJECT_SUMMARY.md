@@ -4,6 +4,10 @@
 
 Your npm library is ready to use! Here's what has been created:
 
+## 🚀 [Try the Live Demo](https://tr-file.checkleaked.cc)
+
+Test tr-file directly in your browser with our interactive demo! Upload JSON files or paste JSON content to see real-time translations.
+
 ### 📁 Project Structure
 ```
 translate-cmd/
