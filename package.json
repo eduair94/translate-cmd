@@ -50,7 +50,7 @@
   "bugs": {
     "url": "https://github.com/eduair94/translate-cmd/issues"
   },
-  "homepage": "https://github.com/eduair94/translate-cmd#readme",
+  "homepage": "https://tr-file.checkleaked.cc",
   "demo": "https://tr-file.checkleaked.cc",
   "dependencies": {
     "axios": "^1.6.0",
