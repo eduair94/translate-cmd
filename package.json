@@ -1,6 +1,6 @@
 {
   "name": "tr-file",
-  "version": "1.4.2",
+  "version": "1.4.3",
   "description": "A fast command-line tool and TypeScript/JavaScript library for translating JSON files using Google Translate API. Features structure preservation, placeholder protection, batch translation, recursive search, incremental updates, array support, and programmatic API.",
   "main": "index.js",
   "types": "index.d.ts",
