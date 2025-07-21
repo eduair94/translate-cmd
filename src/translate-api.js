@@ -132,6 +132,11 @@ class TranslateAPI {
       const textArray = Array.isArray(texts) ? texts : [texts];
       const sampleText = textArray.slice(0, 3).join(' ');
       
+      // Log language detection API request
+      if (this.verbose) {
+        console.log(chalk.blue(`📡 Language Detection: ${sampleText.length} chars`));
+      }
+      
       const response = await axios.post(
         `${this.detectUrl}?key=${this.apiKey}`,
         { q: sampleText },
@@ -330,6 +335,14 @@ class TranslateAPI {
       // Protect placeholders in all texts
       const protectedTexts = texts.map(text => this.protectPlaceholders(text));
       const textsToTranslate = protectedTexts.map(p => p.protectedText);
+      
+      // Calculate total characters being sent
+      const totalChars = textsToTranslate.reduce((sum, text) => sum + text.length, 0);
+      
+      // Log API request details
+      if (this.verbose) {
+        console.log(chalk.blue(`📡 API Request: ${texts.length} strings, ${totalChars} chars → ${targetLanguage.toUpperCase()}`));
+      }
       
       const requestBody = {
         q: textsToTranslate,

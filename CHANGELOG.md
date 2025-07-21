@@ -11,6 +11,55 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Homepage Update**: Updated npm homepage to point to demo page https://tr-file.checkleaked.cc
 - **Author Information**: Updated author details with proper email and LinkedIn profile
 
+## [1.4.6] - 2025-07-21
+
+### Added
+- **API Request Logging**: Added detailed logging for all Google Translate API requests
+- **Character Count Tracking**: Shows number of strings and total characters sent to API
+- **Language Detection Logging**: Logs character count for language detection requests
+- **Verbose Mode**: Enhanced logging with API request details for better debugging
+
+### Changed
+- **CLI Verbose Mode**: Enabled verbose logging by default in CLI for better transparency
+- **API Transparency**: Users can now see exactly what data is being sent to Google Translate API
+
+### Developer Experience
+- **Debug Information**: Easier debugging with detailed API request information
+- **Usage Monitoring**: Better visibility into API usage and request patterns
+
+## [1.4.5] - 2025-07-21
+
+### Improved
+- **Performance Optimization**: CLI now skips translation and API calls when target files are already up to date
+- **Smart Detection**: Only performs translation when there are new keys to translate
+- **User Experience**: Clear messaging when translations are up to date vs when new translations are added
+
+### Fixed
+- **Unnecessary API Calls**: Prevents redundant translation requests when no new content exists
+- **File Writing**: Only writes translation files when there are actual changes
+
+## [1.4.4] - 2025-07-17
+
+### Fixed
+- **Array Structure Preservation**: Fixed critical issue where CLI command was flattening nested arrays into dot-notation keys
+- **Complex JSON Support**: Arrays with nested objects (like FAQ questions) now properly maintain their structure during translation
+- **CLI vs API Consistency**: CLI now uses the same translation engine as the programmatic API for consistent behavior
+
+### Changed
+- **Translation Engine**: Updated CLI to use the same TranslateAPI class for consistent structure preservation
+- **Deep Merge Logic**: Improved merging of existing translations with new ones while preserving array structures
+
+## [1.4.3] - 2025-07-17
+
+### Fixed
+- **Array Structure Preservation**: Fixed critical issue where CLI command was flattening nested arrays into dot-notation keys
+- **Complex JSON Support**: Arrays with nested objects (like FAQ questions) now properly maintain their structure during translation
+- **CLI vs API Consistency**: CLI now uses the same translation engine as the programmatic API for consistent behavior
+
+### Changed
+- **Translation Engine**: Updated CLI to use the same TranslateAPI class for consistent structure preservation
+- **Deep Merge Logic**: Improved merging of existing translations with new ones while preserving array structures
+
 ## [1.4.2] - 2025-07-16
 
 ### Added

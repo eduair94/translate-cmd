@@ -1,4 +1,107 @@
 {
-  "root.title": "Root Level Translation",
-  "root.message": "This is from the root directory"
+  "subscribe": {
+    "status": "Status",
+    "restoreSubscription": "Restore Subscription",
+    "title": "API Subscription Plans",
+    "subtitle": "Choose the perfect plan for your needs",
+    "description": "Get access to our WhatsApp API with flexible pricing options",
+    "currentPlan": "Current Plan",
+    "choosePlan": "Choose Plan",
+    "upgradeNow": "Upgrade Now",
+    "manageSubscription": "Manage Subscription",
+    "resyncSubscription": "Resync Subscription",
+    "resyncExisting": "Have existing subscription?",
+    "resyncExistingHint": "Click here if you already have a PayPal subscription",
+    "cancelSubscription": "Cancel Subscription",
+    "activeSubscription": "Active Subscription",
+    "subscriptionExpires": "Expires on",
+    "pendingCancellation": "Pending cancellation",
+    "renewSubscription": "Renew Subscription",
+    "paymentMethod": "Payment Method",
+    "billingHistory": "Billing History",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "yearlyDiscount": "Save 10%",
+    "yearlyDiscountBadge": "10% off",
+    "basicPlan": {
+      "name": "Basic Plan",
+      "price": "$5",
+      "priceYearly": "$54",
+      "description": "Perfect for small projects and testing",
+      "features": ["500 requests per day", "1 request every 2 seconds", "WhatsApp profile data", "Profile picture access", "Business status check", "Web-only access", "Email support"]
+    },
+    "features": {
+      "requestsPerDay": "requests per day",
+      "rateLimit": "Rate limit: 1 request every 2 seconds",
+      "webOnly": "Web-only access",
+      "emailSupport": "Email support",
+      "whatsappData": "WhatsApp profile data",
+      "profilePictures": "Profile picture access",
+      "businessStatus": "Business status check"
+    },
+    "paymentProcessing": "Processing payment...",
+    "paymentSuccess": "Payment successful! Your subscription is now active.",
+    "paymentError": "Payment failed. Please try again.",
+    "paymentCancelled": "Payment was cancelled.",
+    "loginRequired": "Please log in to subscribe",
+    "loginPrompt": "You need to be logged in to manage your subscription.",
+    "subscriptionActive": "Your subscription is active",
+    "subscriptionExpired": "Your subscription has expired",
+    "subscriptionCancelled": "Your subscription has been cancelled",
+    "success": {
+      "title": "Subscription Activated!",
+      "message": "Thank you for subscribing! Your payment has been processed and your subscription is now active.",
+      "processing": "Processing your subscription...",
+      "activated": "Your subscription has been successfully activated!",
+      "goHome": "Go to Home",
+      "manageSubscription": "Manage Subscription"
+    },
+    "cancel": {
+      "title": "Subscription Cancelled",
+      "message": "Your subscription process was cancelled. Don't worry, no charges were made to your account.",
+      "noCharge": "No charges were made to your account.",
+      "tryAgain": "Try Again",
+      "goHome": "Go to Home",
+      "faq": {
+        "title": "Need Help?",
+        "whyCancel": {
+          "question": "Why was my subscription cancelled?",
+          "answer": "Subscriptions can be cancelled for various reasons: you chose to cancel during the payment process, there was a payment issue, or you closed the payment window. No worries - you can try again anytime!"
+        },
+        "security": {
+          "question": "Is my payment information secure?",
+          "answer": "Absolutely! We use PayPal's secure payment processing system. We never store your credit card information on our servers. All payments are processed through PayPal's encrypted and PCI-compliant infrastructure."
+        },
+        "support": {
+          "question": "Need help with your subscription?",
+          "answer": "If you're having trouble with the subscription process or have any questions, please contact our support team. We're here to help you get set up with the perfect plan for your needs."
+        }
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "questions": [
+        {
+          "question": "What happens if I exceed my daily limit?",
+          "answer": "If you exceed your daily limit of 500 requests, you'll need to wait until the next day or upgrade to a higher plan."
+        },
+        {
+          "question": "Can I cancel my subscription anytime?",
+          "answer": "Yes, you can cancel your subscription at any time. You'll continue to have access until the end of your billing period."
+        },
+        {
+          "question": "What's the difference between monthly and yearly plans?",
+          "answer": "The yearly plan offers a 20% discount compared to monthly billing, essentially giving you 2 months free."
+        },
+        {
+          "question": "Is there a free trial?",
+          "answer": "We offer limited free access for testing. Sign up to try our API with basic limits."
+        },
+        {
+          "question": "What payment methods do you accept?",
+          "answer": "We accept all major credit cards, PayPal, and other payment methods through our secure payment processor."
+        }
+      ]
+    }
+  }
 }

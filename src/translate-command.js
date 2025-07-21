@@ -136,10 +136,8 @@ class TranslateCommand {
 
   async translateToLanguage(sourceData, strings, targetLanguage, sourceLanguage) {
     const spinner = ora(`Translating from ${sourceLanguage.toUpperCase()} to ${targetLanguage.toUpperCase()}...`).start();
-    
     try {
       const outputFile = this.getOutputFilePath(targetLanguage);
-      
       // Load existing translation file if it exists
       let existingData = {};
       try {
@@ -150,49 +148,35 @@ class TranslateCommand {
         // File doesn't exist or is invalid, start fresh
         spinner.text = `Creating new ${targetLanguage.toUpperCase()} translation file...`;
       }
-      
-      // Start with existing data
-      const translatedData = { ...existingData };
-      
-      // Filter out strings that already exist in the target file
-      const stringsToTranslate = strings.filter(({ path: stringPath }) => {
-        return !translatedData.hasOwnProperty(stringPath);
+
+      // Use the TranslateAPI class for consistent translation behavior
+      const TranslateAPI = require('./translate-api');
+      const translateAPI = new TranslateAPI({
+        apiKey: this.apiKey,
+        sourceLanguage: sourceLanguage,
+        delay: this.delay,
+        verbose: true // Enable verbose for API request logging
       });
-      
-      if (stringsToTranslate.length === 0) {
-        spinner.succeed(`${targetLanguage.toUpperCase()} translation up to date → ${path.basename(outputFile)}`);
-        return;
+
+      // Get the translated data using the API (preserves structure)
+      const translationResult = await translateAPI.translateJSON(sourceData, [targetLanguage]);
+      const translatedData = translationResult[targetLanguage];
+
+      // Merge with existing data if any
+      const mergedData = this.deepMerge(existingData, translatedData);
+
+      // Count new vs existing translations
+      const existingKeys = this.countKeys(existingData);
+      const mergedKeys = this.countKeys(mergedData);
+      const newKeys = mergedKeys - existingKeys;
+
+      // Only write and report if there are new keys
+      if (newKeys > 0) {
+        await fs.writeFile(outputFile, JSON.stringify(mergedData, null, 2), 'utf8');
+        spinner.succeed(`${targetLanguage.toUpperCase()} translation completed → ${path.basename(outputFile)} (${newKeys} new, ${existingKeys} existing)`);
+      } else {
+        spinner.succeed(`${targetLanguage.toUpperCase()} translation up to date → ${path.basename(outputFile)} (no new keys)`);
       }
-      
-      // Extract unique texts that need translation
-      const textsToTranslate = [...new Set(stringsToTranslate.map(s => s.text))];
-      
-      spinner.text = `Translating ${textsToTranslate.length} unique strings to ${targetLanguage.toUpperCase()}... (${stringsToTranslate.length} new keys)`;
-      
-      // Batch translate all texts at once
-      const translatedTexts = await this.batchTranslateTexts(textsToTranslate, targetLanguage, sourceLanguage);
-      
-      // Create a mapping from original to translated text
-      const translationMap = new Map();
-      for (let i = 0; i < textsToTranslate.length; i++) {
-        translationMap.set(textsToTranslate[i], translatedTexts[i]);
-      }
-      
-      // Apply translations only to new keys
-      for (const { path: stringPath, text } of stringsToTranslate) {
-        const translatedText = translationMap.get(text) || text;
-        translatedData[stringPath] = translatedText;
-      }
-      
-      // Save merged translated file
-      await fs.writeFile(outputFile, JSON.stringify(translatedData, null, 2), 'utf8');
-      
-      const totalKeys = Object.keys(translatedData).length;
-      const newKeys = stringsToTranslate.length;
-      const existingKeys = totalKeys - newKeys;
-      
-      spinner.succeed(`${targetLanguage.toUpperCase()} translation completed → ${path.basename(outputFile)} (${newKeys} new, ${existingKeys} existing)`);
-      
     } catch (error) {
       spinner.fail(`Failed to translate to ${targetLanguage.toUpperCase()}`);
       throw error;
@@ -337,6 +321,55 @@ class TranslateCommand {
     const sourceDir = path.dirname(this.sourceFile);
     const sourceExt = path.extname(this.sourceFile);
     return path.join(sourceDir, `${language}${sourceExt}`);
+  }
+
+  deepMerge(existing, newData) {
+    if (!existing || typeof existing !== 'object') {
+      return newData;
+    }
+    if (!newData || typeof newData !== 'object') {
+      return existing;
+    }
+
+    const result = { ...existing };
+    
+    for (const [key, value] of Object.entries(newData)) {
+      if (Array.isArray(value)) {
+        // For arrays, replace entirely (preserving array structure)
+        result[key] = value;
+      } else if (value && typeof value === 'object' && !Array.isArray(value)) {
+        // For objects, merge recursively
+        result[key] = this.deepMerge(result[key], value);
+      } else {
+        // For primitives, only add if not already present
+        if (!(key in result)) {
+          result[key] = value;
+        }
+      }
+    }
+    
+    return result;
+  }
+
+  countKeys(obj, count = 0) {
+    if (!obj || typeof obj !== 'object') {
+      return count;
+    }
+    
+    for (const [key, value] of Object.entries(obj)) {
+      if (typeof value === 'string') {
+        count++;
+      } else if (Array.isArray(value)) {
+        // Count each array element that contains strings
+        for (const item of value) {
+          count += this.countKeys(item);
+        }
+      } else if (typeof value === 'object' && value !== null) {
+        count += this.countKeys(value);
+      }
+    }
+    
+    return count;
   }
 
   sleep(ms) {

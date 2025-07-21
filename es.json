@@ -1,4 +1,116 @@
 {
-  "root.title": "Traducción a nivel raíz",
-  "root.message": "Esto es del directorio raíz"
+  "subscribe": {
+    "status": "Estado",
+    "restoreSubscription": "Restaurar suscripción",
+    "title": "Planes de suscripción de API",
+    "subtitle": "Elige el plan perfecto para tus necesidades",
+    "description": "Obtenga acceso a nuestra API de WhatsApp con opciones de precios flexibles",
+    "currentPlan": "Plan actual",
+    "choosePlan": "Elija un plan",
+    "upgradeNow": "Actualizar ahora",
+    "manageSubscription": "Administrar suscripción",
+    "resyncSubscription": "Suscripción de resincronización",
+    "resyncExisting": "¿Tiene una suscripción existente?",
+    "resyncExistingHint": "Haga clic aquí si ya tiene una suscripción a PayPal",
+    "cancelSubscription": "Cancelar suscripción",
+    "activeSubscription": "Suscripción activa",
+    "subscriptionExpires": "Caduca el",
+    "pendingCancellation": "Pendiente de cancelación",
+    "renewSubscription": "Renovar suscripción",
+    "paymentMethod": "Método de pago",
+    "billingHistory": "Historial de facturación",
+    "monthly": "Mensual",
+    "yearly": "Anual",
+    "yearlyDiscount": "Ahorre un 10%",
+    "yearlyDiscountBadge": "10% de descuento",
+    "basicPlan": {
+      "name": "Plan Básico",
+      "price": "$5",
+      "priceYearly": "$54",
+      "description": "Perfecto para pequeños proyectos y pruebas.",
+      "features": [
+        "500 solicitudes por día",
+        "1 solicitud cada 2 segundos",
+        "Datos del perfil de WhatsApp",
+        "Acceso a la foto de perfil",
+        "Comprobación del estado de la empresa",
+        "Acceso solo a través de la web",
+        "Soporte por correo electrónico"
+      ]
+    },
+    "features": {
+      "requestsPerDay": "solicitudes por día",
+      "rateLimit": "Límite de frecuencia: 1 solicitud cada 2 segundos",
+      "webOnly": "Acceso solo a través de la web",
+      "emailSupport": "Soporte por correo electrónico",
+      "whatsappData": "Datos del perfil de WhatsApp",
+      "profilePictures": "Acceso a la foto de perfil",
+      "businessStatus": "Comprobación del estado de la empresa"
+    },
+    "paymentProcessing": "Procesando pago...",
+    "paymentSuccess": "¡Pago exitoso! Su suscripción ya está activa.",
+    "paymentError": "Pago fallido. Inténtalo de nuevo.",
+    "paymentCancelled": "El pago fue cancelado.",
+    "loginRequired": "Por favor inicia sesión para suscribirte",
+    "loginPrompt": "Necesita iniciar sesión para administrar su suscripción.",
+    "subscriptionActive": "Su suscripción está activa",
+    "subscriptionExpired": "Su suscripción ha expirado",
+    "subscriptionCancelled": "Su suscripción ha sido cancelada",
+    "success": {
+      "title": "¡Suscripción activada!",
+      "message": "¡Gracias por suscribirte! Tu pago se ha procesado y tu suscripción ya está activa.",
+      "processing": "Procesando su suscripción...",
+      "activated": "¡Su suscripción ha sido activada exitosamente!",
+      "goHome": "Ir a Inicio",
+      "manageSubscription": "Administrar suscripción"
+    },
+    "cancel": {
+      "title": "Suscripción cancelada",
+      "message": "Tu suscripción se ha cancelado. No te preocupes, no se ha realizado ningún cargo en tu cuenta.",
+      "noCharge": "No se realizaron cargos a su cuenta.",
+      "tryAgain": "Intentar otra vez",
+      "goHome": "Ir a Inicio",
+      "faq": {
+        "title": "¿Necesitar ayuda?",
+        "whyCancel": {
+          "question": "¿Por qué se canceló mi suscripción?",
+          "answer": "Las suscripciones se pueden cancelar por varios motivos: si cancelaste durante el proceso de pago, hubo un problema con el pago o cerraste la ventana de pago. No te preocupes, ¡puedes volver a intentarlo cuando quieras!"
+        },
+        "security": {
+          "question": "¿Es segura mi información de pago?",
+          "answer": "¡Por supuesto! Utilizamos el sistema de procesamiento de pagos seguro de PayPal. Nunca almacenamos la información de su tarjeta de crédito en nuestros servidores. Todos los pagos se procesan mediante la infraestructura cifrada de PayPal, que cumple con la normativa PCI."
+        },
+        "support": {
+          "question": "¿Necesita ayuda con su suscripción?",
+          "answer": "Si tiene problemas con el proceso de suscripción o alguna pregunta, póngase en contacto con nuestro equipo de soporte. Estamos aquí para ayudarle a configurar el plan perfecto para sus necesidades."
+        }
+      }
+    },
+    "faq": {
+      "title": "Preguntas frecuentes",
+      "questions": [
+        {
+          "question": "¿Qué pasa si excedo mi límite diario?",
+          "answer": "Si excede su límite diario de 500 solicitudes, deberá esperar hasta el día siguiente o actualizar a un plan superior."
+        },
+        {
+          "question": "¿Puedo cancelar mi suscripción en cualquier momento?",
+          "answer": "Sí, puedes cancelar tu suscripción en cualquier momento. Seguirás teniendo acceso hasta el final de tu periodo de facturación."
+        },
+        {
+          "question": "¿Cuál es la diferencia entre los planes mensuales y anuales?",
+          "answer": "El plan anual ofrece un 20% de descuento en comparación con la facturación mensual, lo que básicamente te da 2 meses gratis."
+        },
+        {
+          "question": "¿Hay una prueba gratuita?",
+          "answer": "Ofrecemos acceso gratuito limitado para pruebas. Regístrate para probar nuestra API con límites básicos."
+        },
+        {
+          "question": "¿Qué métodos de pago aceptan?",
+          "answer": "Aceptamos todas las principales tarjetas de crédito, PayPal y otros métodos de pago a través de nuestro procesador de pagos seguro."
+        }
+      ]
+    },
+    "testNewKey": "Esta es una nueva clave de prueba para activar el registro de API"
+  }
 }
